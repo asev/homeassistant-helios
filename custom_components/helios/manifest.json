@@ -1,0 +1,8 @@
+{
+  "domain": "helios",
+  "name": "Helios",
+  "documentation": "https://github.com/asev/homeassistant-helios",
+  "requirements": ["eazyctrl==0.2"],
+  "dependencies": [],
+  "codeowners": ["@asev"]
+}
