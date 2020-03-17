@@ -50,7 +50,6 @@ CONFIG_SCHEMA = vol.Schema(
     extra=vol.ALLOW_EXTRA,
 )
 
-
 async def async_setup(hass, config):
     conf = config[DOMAIN]
     host = conf.get(CONF_HOST)
@@ -66,11 +65,8 @@ async def async_setup(hass, config):
     hass.async_create_task(async_load_platform(hass, "fan", DOMAIN, {}, config))
 
     async_track_time_interval(hass, state_proxy.async_update, SCAN_INTERVAL)
-    await
-    state_proxy.async_update(0)
-
+    await state_proxy.async_update(0)
     return True
-
 
 class HeliosStateProxy:
     def __init__(self, hass, client):
@@ -108,5 +104,5 @@ class HeliosStateProxy:
 
     def fetchPercent(self):
         time.sleep(2)
-        self._percent = self._client.get_variable("v00103", 2, conversion=int)
+        self._percent = self._client.get_variable("v00103", 3, conversion=int)
         async_dispatcher_send(self._hass, SIGNAL_HELIOS_STATE_UPDATE)
