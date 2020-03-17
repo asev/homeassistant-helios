@@ -127,10 +127,6 @@ class HeliosDaysSensor(Entity):
         self._name = name
 
     @property
-    def should_poll(self):
-        return False
-
-    @property
     def name(self):
         return self._name
 
