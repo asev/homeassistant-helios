@@ -75,12 +75,24 @@ class HeliosStateProxy:
         self._auto = None
         self._speed = None
         self._percent = None
+        self._boost_time = 0
 
     def set_speed(self, speed: str):
         self._client.set_variable('v00101', '1')
         self._auto = False
         self._client.set_feature('fan_stage', SPEED_TO_VALUE[speed])
         self._speed = SPEED_TO_VALUE[speed]
+        self.fetchPercent()
+
+    def start_boost_mode(self, speed: str, time: int):
+        self._client.set_variable('v00093', '0')
+        self._client.set_variable('v00092', SPEED_TO_VALUE[speed])
+        self._client.set_variable('v00091', time)
+        self._client.set_variable('v00094', '1')
+        self.fetchPercent()
+
+    def stop_boost_mode(self):
+        self._client.set_variable('v00094', '0')
         self.fetchPercent()
 
     def set_auto_mode(self, enabled: bool):
@@ -97,6 +109,9 @@ class HeliosStateProxy:
     def is_auto(self) -> bool:
         return self._auto
 
+    def get_boost_time(self) -> int:
+        return self._boost_time
+
     async def async_update(self, event_time):
         self._auto = self._client.get_variable("v00101", 1, conversion=int) == 0
         self._speed = self._client.get_feature('fan_stage')
@@ -104,5 +119,6 @@ class HeliosStateProxy:
 
     def fetchPercent(self):
         time.sleep(2)
+        self._boost_time = self._client.get_variable("v00093", 3, conversion=int)
         self._percent = self._client.get_variable("v00103", 3, conversion=int)
         async_dispatcher_send(self._hass, SIGNAL_HELIOS_STATE_UPDATE)
