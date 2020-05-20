@@ -1,4 +1,4 @@
-from homeassistant.components.switch import SwitchDevice
+from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
@@ -16,7 +16,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
         ]
     )
 
-class HeliosAutoSwitch(SwitchDevice):
+class HeliosAutoSwitch(SwitchEntity):
     def __init__(self, state_proxy):
         self._state_proxy = state_proxy
 
@@ -51,7 +51,7 @@ class HeliosAutoSwitch(SwitchDevice):
     def _update_callback(self):
         self.async_schedule_update_ha_state(True)
 
-class HeliosBoostSwitch(SwitchDevice):
+class HeliosBoostSwitch(SwitchEntity):
     def __init__(self, state_proxy):
         self._state_proxy = state_proxy
 
