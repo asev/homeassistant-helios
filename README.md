@@ -21,6 +21,13 @@ helios:
 
 ## Configuration
 
+- `name` (optional) Name of a fan entity. All other entities will start with this name. By default it's `Helios`
+```yaml
+helios:
+    host: !secret ip_helios
+    name: "Office Vent"
+```
+
 - `next_filter_change` (optional) configuration variable with date of next filter change.
 It can be used to setup automated reminder for filter change.
 ```yaml

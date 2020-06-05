@@ -12,22 +12,23 @@ from . import (
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
     client = hass.data[DOMAIN]["client"]
+    name = hass.data[DOMAIN]["name"] + ' '
     state_proxy = hass.data[DOMAIN]["state_proxy"]
 
     sensors = [
-        HeliosTempSensor(client, "Outside Air", "temp_outside_air"),
-        HeliosTempSensor(client, "Supply Air", "temp_supply_air"),
-        HeliosTempSensor(client, "Extract Air", "temp_extract_air"),
-        HeliosTempSensor(client, "Exhaust Air", "temp_outgoing_air"),
-        HeliosSensor(client, "Extract Air Humidity", "v02136", 2, "%", "mdi:water-percent"),
-        HeliosSensor(client, "Supply Air Speed", "v00348", 4, "rpm", "mdi:fan"),
-        HeliosSensor(client, "Extract Air Speed", "v00349", 4, "rpm", "mdi:fan"),
-        HeliosFanSpeedSensor(state_proxy),
-        HeliosBoostTimeSensor(state_proxy),
+        HeliosTempSensor(client, name + "Outside Air", "temp_outside_air"),
+        HeliosTempSensor(client, name + "Supply Air", "temp_supply_air"),
+        HeliosTempSensor(client, name + "Extract Air", "temp_extract_air"),
+        HeliosTempSensor(client, name + "Exhaust Air", "temp_outgoing_air"),
+        HeliosSensor(client, name + "Extract Air Humidity", "v02136", 2, "%", "mdi:water-percent"),
+        HeliosSensor(client, name + "Supply Air Speed", "v00348", 4, "rpm", "mdi:fan"),
+        HeliosSensor(client, name + "Extract Air Speed", "v00349", 4, "rpm", "mdi:fan"),
+        HeliosFanSpeedSensor(state_proxy, name),
+        HeliosBoostTimeSensor(state_proxy, name),
     ]
 
     if hass.data[DOMAIN]["next_filter"] is not None:
-        sensors.append(HeliosDaysSensor("Next Filter Change in", hass.data[DOMAIN]["next_filter"]))
+        sensors.append(HeliosDaysSensor(name + "Next Filter Change in", hass.data[DOMAIN]["next_filter"]))
 
     async_add_entities(
         sensors,
@@ -90,8 +91,9 @@ class HeliosSensor(Entity):
         return self._units
 
 class HeliosFanSpeedSensor(Entity):
-    def __init__(self, state_proxy):
+    def __init__(self, state_proxy, name):
         self._state_proxy = state_proxy
+        self._name = name + "Fan Speed"
 
     @property
     def should_poll(self):
@@ -108,7 +110,7 @@ class HeliosFanSpeedSensor(Entity):
 
     @property
     def name(self):
-        return "Fan Speed"
+        return self._name
 
     @property
     def state(self):
@@ -123,8 +125,9 @@ class HeliosFanSpeedSensor(Entity):
         return "%"
 
 class HeliosBoostTimeSensor(Entity):
-    def __init__(self, state_proxy):
+    def __init__(self, state_proxy, name):
         self._state_proxy = state_proxy
+        self._name = name + "Boost Time"
 
     @property
     def should_poll(self):
@@ -141,7 +144,7 @@ class HeliosBoostTimeSensor(Entity):
 
     @property
     def name(self):
-        return "Boost time"
+        return self._name
 
     @property
     def state(self):

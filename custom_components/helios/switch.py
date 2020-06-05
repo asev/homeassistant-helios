@@ -8,21 +8,23 @@ from . import (
 )
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+    name = hass.data[DOMAIN]["name"] + ' '
     state_proxy = hass.data[DOMAIN]["state_proxy"]
     async_add_entities(
         [
-            HeliosAutoSwitch(state_proxy),
-            HeliosBoostSwitch(state_proxy),
+            HeliosAutoSwitch(state_proxy, name + "Auto Mode"),
+            HeliosBoostSwitch(state_proxy, name + "Boost Mode"),
         ]
     )
 
 class HeliosAutoSwitch(SwitchEntity):
-    def __init__(self, state_proxy):
+    def __init__(self, state_proxy, name):
         self._state_proxy = state_proxy
+        self._name = name
 
     @property
     def name(self) -> str:
-        return "Auto Mode"
+        return self._name
 
     @property
     def icon(self):
@@ -52,12 +54,13 @@ class HeliosAutoSwitch(SwitchEntity):
         self.async_schedule_update_ha_state(True)
 
 class HeliosBoostSwitch(SwitchEntity):
-    def __init__(self, state_proxy):
+    def __init__(self, state_proxy, name):
         self._state_proxy = state_proxy
+        self._name = name
 
     @property
     def name(self) -> str:
-        return "Boost Mode"
+        return self._name
 
     @property
     def icon(self):
