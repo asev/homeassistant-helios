@@ -60,6 +60,16 @@ async def async_setup(hass, config):
     state_proxy = HeliosStateProxy(hass, client)
     hass.data[DOMAIN] = {"client": client, "state_proxy": state_proxy, "next_filter": next_filter, "name": name}
 
+    def handle_fan_boost(call):
+        duration = call.data.get('duration', 60)
+        speed = call.data.get('speed', 'high')
+        if int(duration) > 0:
+            hass.data[DOMAIN]['state_proxy'].start_boost_mode(speed, duration)
+        else:
+            hass.data[DOMAIN]['state_proxy'].stop_boost_mode()
+
+    hass.services.async_register(DOMAIN, "fan_boost", handle_fan_boost)
+
     hass.async_create_task(async_load_platform(hass, "sensor", DOMAIN, {}, config))
     hass.async_create_task(async_load_platform(hass, "switch", DOMAIN, {}, config))
     hass.async_create_task(async_load_platform(hass, "fan", DOMAIN, {}, config))
