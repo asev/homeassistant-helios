@@ -1,0 +1,18 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Helios Ventilation",
+        "description": "",
+        "data": {
+          "host": "Host or IP address of the ventilation unit",
+          "name": "Name of the integration instance"
+        }
+      }
+    },
+    "error": {
+      "invalid_host": "Invalid hostname or IP address."
+    },
+    "abort": {}
+  }
+}

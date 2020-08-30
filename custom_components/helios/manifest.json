@@ -2,6 +2,7 @@
   "domain": "helios",
   "name": "Helios",
   "documentation": "https://github.com/asev/homeassistant-helios",
+  "config_flow": true,
   "requirements": ["eazyctrl==0.2"],
   "dependencies": [],
   "codeowners": ["@asev"]

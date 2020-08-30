@@ -2,23 +2,23 @@ from homeassistant.core import callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
 from homeassistant.components.fan import (
-    SPEED_HIGH,
-    SPEED_LOW,
-    SPEED_MEDIUM,
-    SPEED_OFF,
     SUPPORT_SET_SPEED,
     FanEntity,
 )
 
-from . import (
+from .const import (
     DOMAIN,
+    SPEED_OFF,
+    SPEED_LOW,
+    SPEED_MEDIUM,
+    SPEED_HIGH,
     SPEED_MAX,
     VALUE_TO_SPEED,
     SPEED_TO_VALUE,
     SIGNAL_HELIOS_STATE_UPDATE
 )
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_entry(hass, entry, async_add_entities):
     state_proxy = hass.data[DOMAIN]["state_proxy"]
     name = hass.data[DOMAIN]["name"]
     async_add_entities([HeliosFan(state_proxy, name)])

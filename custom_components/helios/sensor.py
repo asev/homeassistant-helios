@@ -5,12 +5,12 @@ from homeassistant.core import callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 from homeassistant.helpers.entity import Entity
 
-from . import (
+from .const import (
     DOMAIN,
     SIGNAL_HELIOS_STATE_UPDATE
 )
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_entry(hass, entry, async_add_entities):
     client = hass.data[DOMAIN]["client"]
     name = hass.data[DOMAIN]["name"] + ' '
     state_proxy = hass.data[DOMAIN]["state_proxy"]
