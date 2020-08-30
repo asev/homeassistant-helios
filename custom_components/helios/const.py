@@ -12,8 +12,6 @@ DEFAULT_NAME = "Helios"
 
 SPEED_MAX = "max"
 
-CONF_NEXT_FILTER = "next_filter_change"
-
 SIGNAL_HELIOS_STATE_UPDATE = "helios_state_update"
 SCAN_INTERVAL = datetime.timedelta(seconds=60)
 

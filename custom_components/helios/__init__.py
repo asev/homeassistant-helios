@@ -29,21 +29,9 @@ from .const import (
     SCAN_INTERVAL,
     CONF_HOST,
     CONF_NAME,
-    CONF_NEXT_FILTER,
 )
 
 import eazyctrl
-
-CONFIG_SCHEMA = vol.Schema(
-    {
-        DOMAIN: vol.Schema(
-            {
-                vol.Optional(CONF_NEXT_FILTER, default=None): cv.date
-            }
-        )
-    },
-    extra=vol.ALLOW_EXTRA,
-)
 
 async def async_setup(hass: HomeAssistant, config: dict):
     hass.data.setdefault(DOMAIN, {})
@@ -53,11 +41,10 @@ async def async_setup(hass: HomeAssistant, config: dict):
 async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry):
     host = config_entry.data[CONF_HOST]
     name = config_entry.data[CONF_NAME]
-    next_filter = hass.data[DOMAIN]["config"][CONF_NEXT_FILTER]
 
     client = eazyctrl.EazyController(host)
     state_proxy = HeliosStateProxy(hass, client)
-    hass.data[DOMAIN] = {"client": client, "state_proxy": state_proxy, "next_filter": next_filter, "name": name}
+    hass.data[DOMAIN] = {"client": client, "state_proxy": state_proxy, "name": name}
 
     def handle_fan_boost(call):
         duration = call.data.get('duration', 60)
