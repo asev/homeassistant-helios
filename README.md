@@ -4,37 +4,21 @@
 
 Custom component for Home Assistant to connect Helios ventilation system.
 
-Tested on Helios KWL EC 300 W. Most of functions will work on other Helios devices.
+Tested on Helios KWL EC 300 W. Most functions will work on other Helios devices.
 
 ![Example screenshot](screenshot.png)
 
 ## Installation
 
-1. Make sure your Helios is connected to local network and you know it's IP address.
-2. Copy the custom_components folder to your own Home Assistant /config folder.
-3. Enable the component by adding the following in your `configuration.yml`:
-```yaml
-helios:
-    host: IP_ADDRESS_OF_HELIOS_DEVICE
-```
-4. Restart Home Assistant server
+1. Make sure your Helios has been connected to local network, and you know it's IP address.
 
-## Configuration
+2. Install **Helios ventilation** via HACS or copy the custom_components folder to your own Home Assistant /config folder.
 
-- `name` (optional) Name of a fan entity. All other entities will start with this name. By default it's `Helios`
-```yaml
-helios:
-    host: !secret ip_helios
-    name: "Office Vent"
-```
+3. Once Home Assistant has restarted, go to Configuration > Integrations.
 
-- `next_filter_change` (optional) configuration variable with date of next filter change.
-It can be used to setup automated reminder for filter change.
-```yaml
-helios:
-    host: !secret ip_helios
-    next_filter_change: "2020-08-08"
-```
+4. Select the Helios integration and finish the setup.
+
+Done. `fan.NAME` (default `fan.helios`) entity should be available in Home Assistant.
 
 ## Extra: Boost and Whisper modes
 
@@ -99,7 +83,6 @@ input_select:
             name: Helios Boost
             action_name: 'Start/Stop' 
 ```
-
 
 ## Feedback
 
