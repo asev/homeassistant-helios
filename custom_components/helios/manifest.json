@@ -1,6 +1,7 @@
 {
   "domain": "helios",
   "name": "Helios",
+  "version": "1.0.0",
   "documentation": "https://github.com/asev/homeassistant-helios",
   "issue_tracker": "https://github.com/asev/homeassistant-helios/issues",
   "config_flow": true,
