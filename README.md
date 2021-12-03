@@ -4,7 +4,7 @@
 
 Custom component for Home Assistant to connect Helios ventilation system.
 
-Tested on Helios KWL EC 300 W. Most functions will work on other Helios devices.
+Tested on Helios KWL EC 300 W and KWL EC 340D. Most functions will work on other Helios devices.
 
 ![Example screenshot](screenshot.png)
 

@@ -80,7 +80,7 @@ class HeliosStateProxy:
         self.fetchPercent()
 
     def start_boost_mode(self, speed: str, time: int):
-        self._client.set_variable('v00093', '0')
+        self._client.set_variable('v00094', '0')
         self._client.set_variable('v00092', SPEED_TO_VALUE[speed])
         self._client.set_variable('v00091', time)
         self._client.set_variable('v00094', '1')
