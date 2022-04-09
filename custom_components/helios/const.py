@@ -1,15 +1,13 @@
 import datetime
 from homeassistant.const import CONF_HOST, CONF_NAME
-from homeassistant.components.fan import (
-    SPEED_HIGH,
-    SPEED_LOW,
-    SPEED_MEDIUM,
-    SPEED_OFF
-)
 
 DOMAIN = 'helios'
 DEFAULT_NAME = "Helios"
 
+SPEED_OFF = "off"
+SPEED_LOW = "low"
+SPEED_MEDIUM = "medium"
+SPEED_HIGH = "high"
 SPEED_MAX = "max"
 
 SIGNAL_HELIOS_STATE_UPDATE = "helios_state_update"

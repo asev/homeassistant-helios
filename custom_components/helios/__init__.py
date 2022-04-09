@@ -113,7 +113,6 @@ class HeliosStateProxy:
         self.fetchPercent()
 
     def fetchPercent(self):
-        time.sleep(2)
         self._boost_time = self._client.get_variable("v00093", 3, conversion=int)
         self._percent = self._client.get_variable("v00103", 3, conversion=int)
         async_dispatcher_send(self._hass, SIGNAL_HELIOS_STATE_UPDATE)
