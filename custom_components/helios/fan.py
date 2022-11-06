@@ -2,19 +2,15 @@ from homeassistant.core import callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
 from homeassistant.components.fan import (
-    SUPPORT_SET_SPEED,
+    FanEntityFeature,
     FanEntity,
 )
 
 from .const import (
     DOMAIN,
-    SPEED_OFF,
-    SPEED_LOW,
-    SPEED_MEDIUM,
-    SPEED_HIGH,
-    SPEED_MAX,
-    VALUE_TO_SPEED,
-    SPEED_TO_VALUE,
+    SUPPORTED_PRESET_MODES,
+    PRESET_MODE_OFF,
+    PRESET_MODE_MEDIUM,
     SIGNAL_HELIOS_STATE_UPDATE
 )
 
@@ -26,7 +22,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class HeliosFan(FanEntity):
     def __init__(self, state_proxy, name):
         self._state_proxy = state_proxy
-        self._name = name
+        self._attr_name = name
 
     @property
     def should_poll(self):
@@ -41,18 +37,19 @@ class HeliosFan(FanEntity):
     def _update_callback(self):
         self.async_schedule_update_ha_state(True)
 
-    async def async_set_speed(self, speed: str):
-        """async_turn_on is used to set speed"""
-
-    async def async_turn_on(self, speed: str = None, **kwargs) -> None:
-        self._state_proxy.set_speed(speed if not speed is None else SPEED_MEDIUM)
+    async def async_turn_on(self, percentage: int | None = None, preset_mode: str | None = None, **kwargs) -> None:
+        self._state_proxy.set_speed(preset_mode if not preset_mode is None else PRESET_MODE_MEDIUM)
 
     async def async_turn_off(self, **kwargs) -> None:
-        self._state_proxy.set_speed(SPEED_OFF)
+        self._state_proxy.set_speed(PRESET_MODE_OFF)
+
+    async def async_set_preset_mode(self, preset_mode: str) -> None:
+        """Set new preset mode."""
+        self._state_proxy.set_speed(preset_mode)
 
     @property
     def name(self):
-        return self._name
+        return self._attr_name
 
     @property
     def is_on(self) -> bool:
@@ -60,16 +57,16 @@ class HeliosFan(FanEntity):
         return speed != None and speed > 0
 
     @property
-    def speed(self) -> str:
-        speed = self._state_proxy.get_speed()
-        if speed == None:
-            return None
-        return VALUE_TO_SPEED[speed]
+    def percentage(self) -> str:
+        percentage = self._state_proxy.get_speed_percent()
+        if percentage == None:
+            return 0
 
     @property
-    def speed_list(self) -> list:
-        return [SPEED_OFF, SPEED_LOW, SPEED_MEDIUM, SPEED_HIGH, SPEED_MAX]
+    def preset_modes(self) -> list[str] | None:
+        """Return a list of available preset modes."""
+        return SUPPORTED_PRESET_MODES
 
     @property
     def supported_features(self) -> int:
-        return SUPPORT_SET_SPEED
+        return FanEntityFeature.PRESET_MODE
