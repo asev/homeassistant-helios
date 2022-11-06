@@ -10,20 +10,14 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.dispatcher import async_dispatcher_send
 from homeassistant.helpers.event import async_track_time_interval
+from homeassistant.helpers.event import async_call_later
 
 from homeassistant.components.fan import (
-    SUPPORT_SET_SPEED,
     FanEntity,
 )
 
 from .const import (
     DOMAIN,
-    SPEED_OFF,
-    SPEED_LOW,
-    SPEED_MEDIUM,
-    SPEED_HIGH,
-    SPEED_MAX,
-    VALUE_TO_SPEED,
     SPEED_TO_VALUE,
     SIGNAL_HELIOS_STATE_UPDATE,
     SCAN_INTERVAL,
@@ -77,23 +71,23 @@ class HeliosStateProxy:
         self._auto = False
         self._client.set_feature('fan_stage', SPEED_TO_VALUE[speed])
         self._speed = SPEED_TO_VALUE[speed]
-        self.fetchPercent()
+        async_call_later(self._hass, 2, self.fetchPercent)
 
     def start_boost_mode(self, speed: str, time: int):
         self._client.set_variable('v00094', '0')
         self._client.set_variable('v00092', SPEED_TO_VALUE[speed])
         self._client.set_variable('v00091', time)
         self._client.set_variable('v00094', '1')
-        self.fetchPercent()
+        async_call_later(self._hass, 2, self.fetchPercent)
 
     def stop_boost_mode(self):
         self._client.set_variable('v00094', '0')
-        self.fetchPercent()
+        async_call_later(self._hass, 2, self.fetchPercent)
 
     def set_auto_mode(self, enabled: bool):
         self._client.set_variable('v00101', '0' if enabled else '1')
         self._auto = enabled
-        self.fetchPercent()
+        async_call_later(self._hass, 2, self.fetchPercent)
 
     def get_speed(self):
         return self._speed
@@ -112,8 +106,8 @@ class HeliosStateProxy:
         self._speed = self._client.get_feature('fan_stage')
         self.fetchPercent()
 
-    def fetchPercent(self):
-        time.sleep(2)
+    async def fetchPercent(self, *_):
+        #time.sleep(2)
         self._boost_time = self._client.get_variable("v00093", 3, conversion=int)
         self._percent = self._client.get_variable("v00103", 3, conversion=int)
         async_dispatcher_send(self._hass, SIGNAL_HELIOS_STATE_UPDATE)
